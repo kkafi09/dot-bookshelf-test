@@ -24,7 +24,7 @@ const paginationData = (data: Array<Object>, meta: Meta) => ({
 });
 
 type DataType = Array<any> | Object;
-type MetaType = Array<any>;
+type MetaType = Object;
 
 type ResultType = {
   data: DataType;
