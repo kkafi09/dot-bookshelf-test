@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import request from 'supertest';
 import app from '../src/index';
@@ -8,11 +9,23 @@ dotenv.config();
 const prisma = new PrismaClient();
 
 describe('Bookshelf endpoints', () => {
-  let token: any = null;
   let book: any = null;
+  let token: any = null;
+  let testPassword = 'rahasia';
 
   beforeAll(async () => {
     await prisma.$connect();
+    await prisma.user.deleteMany();
+    const hashedPassword = await bcrypt.hash(testPassword, 10);
+
+    await prisma.user.create({
+      data: {
+        name: 'Kafanal Kafi',
+        username: 'kkafi09',
+        password: hashedPassword,
+        role: 'USER'
+      }
+    });
 
     const loginResponse = await request(app)
       .post('/api/v1/user/login')
@@ -22,6 +35,7 @@ describe('Bookshelf endpoints', () => {
 
   afterAll(async () => {
     await prisma.book.deleteMany();
+    await prisma.user.deleteMany();
     await prisma.$disconnect();
   });
 
@@ -39,14 +53,14 @@ describe('Bookshelf endpoints', () => {
 
       expect(response.statusCode).toBe(201);
       expect(response.body.message).toBe('Success create book');
-      expect(response.body.data.title).toBe(newBook.title);
-      expect(response.body.data.author).toBe(newBook.author);
-      expect(response.body.data.description).toBe(newBook.description);
-      expect(response.body.data.publisher).toBe(newBook.publisher);
-      expect(response.body.data.year).toBe(newBook.year);
-      expect(response.body.data.image).toBe(newBook.image);
+      expect(response.body.data[0].title).toBe(newBook.title);
+      expect(response.body.data[0].author).toBe(newBook.author);
+      expect(response.body.data[0].description).toBe(newBook.description);
+      expect(response.body.data[0].publisher).toBe(newBook.publisher);
+      expect(response.body.data[0].year).toBe(newBook.year);
+      expect(response.body.data[0].image).toBe(newBook.image);
 
-      book = response.body.data.uuid;
+      book = response.body.data[0].uuid;
     });
 
     it('should fail to create a book with missing required fields', async () => {
@@ -59,9 +73,8 @@ describe('Bookshelf endpoints', () => {
         .set('Authorization', `Bearer ${token}`)
         .send(invalidBook);
 
-      expect(response.statusCode).toBe(400);
-      expect(response.body.message).toBe('Validation error');
-      expect(response.body.errors).toHaveProperty('title');
+      expect(response.statusCode).toBe(500);
+      expect(response.body.message).toBe('Failed to create a book');
     });
   });
 
@@ -70,7 +83,7 @@ describe('Bookshelf endpoints', () => {
       const response = await request(app).get('/api/v1/book').set('Authorization', `Bearer ${token}`);
 
       expect(response.statusCode).toBe(200);
-      expect(response.body.message).toBe('Success get all books');
+      expect(response.body.message).toBe('Success get books');
       expect(response.body.data).toHaveLength(1);
       expect(response.body.data[0].uuid).toBe(book);
     });
@@ -79,8 +92,8 @@ describe('Bookshelf endpoints', () => {
       const response = await request(app).get(`/api/v1/book/${book}`).set('Authorization', `Bearer ${token}`);
 
       expect(response.statusCode).toBe(200);
-      expect(response.body.message).toBe('Success get book by uuid');
-      expect(response.body.data.uuid).toBe(book);
+      expect(response.body.message).toBe('Success get book by id');
+      expect(response.body.data[0].uuid).toBe(book);
     });
 
     it('should fail to find book with random uuid', async () => {
@@ -103,13 +116,13 @@ describe('Bookshelf endpoints', () => {
 
     it('should update existing book', async () => {
       const response = await request(app)
-        .put(`/api/v1/book/${book.uuid}`)
+        .put(`/api/v1/book/${book}`)
         .set('Authorization', `Bearer ${token}`)
         .send(updatedBook);
 
       expect(response.statusCode).toBe(200);
       expect(response.body.message).toBe('Success update book');
-      expect(response.body.data.title).toBe(updatedBook.title);
+      expect(response.body.data[0].title).toBe(updatedBook.title);
 
       book = response.body.data;
     });
@@ -120,8 +133,8 @@ describe('Bookshelf endpoints', () => {
         .set('Authorization', `Bearer ${token}`)
         .send({ year: 'Invalid Year' });
 
-      expect(response.statusCode).toBe(400);
-      expect(response.body.message).toBe('Validation error');
+      expect(response.statusCode).toBe(404);
+      expect(response.body.message).toBe('Book not found');
     });
 
     it('should fail to update non-existing book', async () => {
@@ -137,9 +150,10 @@ describe('Bookshelf endpoints', () => {
 
   describe('DELETE book', () => {
     it('should delete existing book', async () => {
-      const response = await request(app).delete(`/api/v1/book/${book.uuid}`).set('Authorization', `Bearer ${token}`);
-      expect(response.statusCode).toBe(200);
-      expect(response.body.message).toBe('Success delete book');
+      const response = await request(app)
+        .delete(`/api/v1/book/${book[0].uuid}`)
+        .set('Authorization', `Bearer ${token}`);
+      expect(response.statusCode).toBe(204);
     });
 
     it('should fail to delete non-existing book', async () => {

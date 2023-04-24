@@ -59,7 +59,7 @@ const response = (
 };
 
 const errorResponse = (res: Response, result: any, message: string = '', code: number = 500) => {
-  let status = true;
+  let status = false;
   let data = result ? result.message : null;
 
   res.status(code).json({
