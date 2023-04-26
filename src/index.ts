@@ -23,7 +23,7 @@ app.get('/', (_req: Request, res: Response) => {
 });
 
 app.use('/api/v1/user/', userApi);
-app.use('/api/v1/book', bookApi);
+app.use('/api/v1/book/', bookApi);
 
 app.listen(port, () => {
   const ctx = 'app-listen';
