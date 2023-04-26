@@ -30,12 +30,6 @@ describe('Authentication endpoints', () => {
   });
 
   afterAll(async () => {
-    await prisma.user.delete({
-      where: {
-        id: user.id
-      }
-    });
-
     await prisma.user.deleteMany();
     await prisma.$disconnect();
   });
@@ -81,6 +75,18 @@ describe('Authentication endpoints', () => {
   });
 
   describe('POST /register', () => {
+    it('returns a 409 error when attempting to register a user with an existing username', async () => {
+      const response = await request(app).post('/api/v1/user/register').send({
+        name: 'Kafanal Kafi',
+        username: 'kafanalkafi',
+        password: 'kafanalkafi123',
+        role: 'USER'
+      });
+
+      expect(response.statusCode).toBe(409);
+      expect(response.body.message).toBe('User with this username already exists');
+    });
+
     it('registers a new user when provided with valid data', async () => {
       const response = await request(app).post('/api/v1/user/register').send({
         name: 'Kafanal Kafi 2',
@@ -99,18 +105,6 @@ describe('Authentication endpoints', () => {
           id: response.body.data[0].user.id
         }
       });
-    });
-
-    it('returns a 409 error when attempting to register a user with an existing username', async () => {
-      const response = await request(app).post('/api/v1/user/register').send({
-        name: 'Kafanal Kafi 3',
-        username: 'kafanalkafi',
-        password: 'kafanalkafi123',
-        role: 'USER'
-      });
-
-      expect(response.statusCode).toBe(409);
-      expect(response.body.message).toBe('User with this username already exists');
     });
   });
 });

@@ -3,9 +3,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express, { Request, Response } from 'express';
 import morgan from 'morgan';
-import logger from './helpers/logger';
 
+import bookApi from './api/book';
 import userApi from './api/user';
+import logger from './helpers/logger';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.get('/', (_req: Request, res: Response) => {
 });
 
 app.use('/api/v1/user/', userApi);
+app.use('/api/v1/book/', bookApi);
 
 app.listen(port, () => {
   const ctx = 'app-listen';

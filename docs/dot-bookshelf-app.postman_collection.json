@@ -1,0 +1,316 @@
+{
+	"info": {
+		"_postman_id": "587366cf-70e9-44e7-adb3-39675586b2bd",
+		"name": "dot-bookshelf-app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18890270"
+	},
+	"item": [
+		{
+			"name": "book",
+			"item": [
+				{
+					"name": "get books",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{server_local}}/api/v1/book/",
+							"host": [
+								"{{server_local}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"book",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get book by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{server_local}}/api/v1/book/a09b7f82-a41c-472e-9c5a-c9dced5cc4dc",
+							"host": [
+								"{{server_local}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"book",
+								"a09b7f82-a41c-472e-9c5a-c9dced5cc4dc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create book",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "buku pertama",
+									"type": "text"
+								},
+								{
+									"key": "author",
+									"value": "aku",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "ini buku pertama ku",
+									"type": "text"
+								},
+								{
+									"key": "publisher",
+									"value": "media ku",
+									"type": "text"
+								},
+								{
+									"key": "year",
+									"value": "2023",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"value": "https://s3-ap-southeast-1.amazonaws.com/ebook-previews/49184/184449/1.jpg",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server_local}}/api/v1/book/",
+							"host": [
+								"{{server_local}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"book",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update book",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "title",
+									"value": "buku pertama update",
+									"type": "text"
+								},
+								{
+									"key": "author",
+									"value": "aku terupdate",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "ini buku pertama ku update",
+									"type": "text"
+								},
+								{
+									"key": "publisher",
+									"value": "media ku",
+									"type": "text"
+								},
+								{
+									"key": "year",
+									"value": "2023",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"value": "https://s3-ap-southeast-1.amazonaws.com/ebook-previews/49184/184449/1.jpg",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server_local}}/api/v1/book/a09b7f82-a41c-472e-9c5a-c9dced5cc4dc",
+							"host": [
+								"{{server_local}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"book",
+								"a09b7f82-a41c-472e-9c5a-c9dced5cc4dc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "register auth Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nama_user",
+							"value": "Muhammad Kafanal Kafi",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "kafi@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "rahasia",
+							"type": "text"
+						},
+						{
+							"key": "foto",
+							"type": "file",
+							"src": "/home/xm3sra/Downloads/user.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server_local}}/api/v1/user/register",
+					"host": [
+						"{{server_local}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login user Copy",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "email",
+							"value": "kafi@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "rahasia",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{server_local}}/api/v1/user/login",
+					"host": [
+						"{{server_local}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get user auth Copy",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY4MTkwNzI0OSwiZXhwIjoxNjgxOTE4MDQ5fQ.60dbeyl9wTcsms9CFtEaYl4zjK_T1eG2RIUINnun6xk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server_local}}/api/v1/user/",
+					"host": [
+						"{{server_local}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server_local",
+			"value": "http://localhost:4000",
+			"type": "string"
+		}
+	]
+}

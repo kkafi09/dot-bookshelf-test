@@ -4,7 +4,9 @@ import jwtAuth from '../middlewares/jwtAuth';
 
 const router = express.Router();
 
-router.get('/', jwtAuth.verifyToken, bookController.getBooks);
+router.get('/', bookController.getBooks);
+
+router.get('/:bookId', bookController.getBookById);
 
 router.post('/', jwtAuth.verifyToken, bookController.createBook);
 

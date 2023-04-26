@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidV4 } from 'uuid';
 import wrapper from '../helpers/wrapper';
 
 const prisma = new PrismaClient();
@@ -43,6 +43,9 @@ const getBookById = async (req: Request, res: Response) => {
         uuid: bookId
       }
     });
+    if (!findBookById) {
+      return wrapper.errorResponse(res, findBookById, 'Book not found', 404);
+    }
 
     const result = wrapper.data(findBookById);
 
@@ -54,7 +57,7 @@ const getBookById = async (req: Request, res: Response) => {
 
 const createBook = async (req: Request, res: Response) => {
   const { title, author, description, publisher, year, image } = req.body;
-  const uuid = uuidv4();
+  const uuid = uuidV4();
 
   try {
     const newBook = await prisma.book.create({
@@ -64,7 +67,7 @@ const createBook = async (req: Request, res: Response) => {
         author,
         description,
         publisher,
-        year,
+        year: Number(year),
         image
       }
     });
@@ -73,9 +76,10 @@ const createBook = async (req: Request, res: Response) => {
 
     return wrapper.response(res, 'success', result, 'Success create book', 201);
   } catch (err) {
-    return wrapper.errorResponse(res, err, 'Failed to create book');
+    return wrapper.errorResponse(res, err, 'Failed to create a book');
   }
 };
+
 const updateBook = async (req: Request, res: Response) => {
   const {
     body: { title, author, description, publisher, year, image },
@@ -101,7 +105,7 @@ const updateBook = async (req: Request, res: Response) => {
         author,
         description,
         publisher,
-        year,
+        year: Number(year),
         image
       }
     });
