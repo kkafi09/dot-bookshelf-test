@@ -15,13 +15,12 @@ describe('Bookshelf endpoints', () => {
 
   beforeAll(async () => {
     await prisma.$connect();
-    await prisma.user.deleteMany();
     const hashedPassword = await bcrypt.hash(testPassword, 10);
 
     await prisma.user.create({
       data: {
         name: 'Kafanal Kafi',
-        username: 'kkafi09',
+        username: 'kafanalkafi',
         password: hashedPassword,
         role: 'USER'
       }
@@ -29,7 +28,7 @@ describe('Bookshelf endpoints', () => {
 
     const loginResponse = await request(app)
       .post('/api/v1/user/login')
-      .send({ username: 'kkafi09', password: 'rahasia' });
+      .send({ username: 'kafanalkafi', password: 'rahasia' });
     token = loginResponse.body.data[0].token;
   });
 

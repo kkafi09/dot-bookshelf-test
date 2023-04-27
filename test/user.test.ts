@@ -22,7 +22,7 @@ describe('Authentication endpoints', () => {
     user = await prisma.user.create({
       data: {
         name: 'Kafanal Kafi',
-        username: 'kafanalkafi',
+        username: 'kkafi09',
         password: hashedPassword,
         role: 'USER'
       }
@@ -38,7 +38,7 @@ describe('Authentication endpoints', () => {
     it('returns a token when provided with valid credentials', async () => {
       const response = await request(app)
         .post('/api/v1/user/login')
-        .send({ username: 'kafanalkafi', password: testPassword });
+        .send({ username: 'kkafi09', password: testPassword });
 
       expect(response.statusCode).toBe(200);
       expect(response.body.message).toBe('Success Login');
@@ -67,7 +67,7 @@ describe('Authentication endpoints', () => {
     it('returns a 400 error when provided with an invalid password', async () => {
       const response = await request(app)
         .post('/api/v1/user/login')
-        .send({ username: 'kafanalkafi', password: 'passwordsalah' });
+        .send({ username: 'kkafi09', password: 'passwordsalah' });
 
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toBe('Invalid username and password');
@@ -78,7 +78,7 @@ describe('Authentication endpoints', () => {
     it('returns a 409 error when attempting to register a user with an existing username', async () => {
       const response = await request(app).post('/api/v1/user/register').send({
         name: 'Kafanal Kafi',
-        username: 'kafanalkafi',
+        username: 'kkafi09',
         password: 'kafanalkafi123',
         role: 'USER'
       });
